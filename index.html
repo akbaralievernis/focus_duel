@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Фокус Дуэль — Artikel & Fälle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">FD</div>
+      <div class="brandText">
+        <div class="title">Фокус Дуэль</div>
+        <div class="subtitle">Быстрая тренировка немецкого</div>
+      </div>
+    </div>
+
+    <div class="topActions">
+      <button class="iconBtn" id="btnTheme" title="Светлый/тёмный">🌓</button>
+      <button class="iconBtn" id="btnReset" title="Сбросить матч">↺</button>
+      <button class="iconBtn" id="btnTeacher" title="Режим учителя">👩‍🏫</button>
+      <button class="iconBtn" id="btnOpenSetup" title="Настройки">⚙️</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="arena card">
+      <div class="arenaTop">
+        <div class="pill" id="pillMode">ДУЭЛЬ</div>
+        <div class="pill" id="pillLevel">BASIC</div>
+        <div class="pill" id="pillSet">Базовый набор</div>
+
+        <div class="turn" id="turnInfo">Ход: —</div>
+
+        <div class="hudRight">
+          <div class="timeBox">
+            <div class="muted small">Время</div>
+            <div class="timeLeft" id="timeLeft">0.0</div>
+          </div>
+
+          <div class="progress">
+            <div class="progressFill" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="question">
+        <div class="qPrompt" id="qPrompt">Нажми «Старт», чтобы начать</div>
+        <div class="qHint" id="qHint"></div>
+      </div>
+
+      <!-- ANSWERS (solo uses it; duel uses choicesA/choicesB) -->
+      <div class="answers" id="answers"></div>
+
+      <div class="duelGrid" id="duelGrid">
+        <div class="side">
+          <div class="sideTop">
+            <div class="team">
+              <div class="teamName" id="teamA">Команда A</div>
+              <div class="meta" id="metaA">серия: <span id="streakA">0</span></div>
+            </div>
+            <div class="score" id="scoreA">0</div>
+          </div>
+          <div class="choices" id="choicesA"></div>
+          <div class="sideMsg" id="msgA"></div>
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="side">
+          <div class="sideTop">
+            <div class="team">
+              <div class="teamName" id="teamB">Команда B</div>
+              <div class="meta" id="metaB">серия: <span id="streakB">0</span></div>
+            </div>
+            <div class="score" id="scoreB">0</div>
+          </div>
+          <div class="choices" id="choicesB"></div>
+          <div class="sideMsg" id="msgB"></div>
+        </div>
+      </div>
+
+      <div class="statusRow">
+        <div class="badge" id="badgeInfo">Готов</div>
+        <div class="status" id="status"></div>
+        <div class="roundBox">
+          <span class="muted">Раунд:</span>
+          <span class="roundNum" id="roundNum">0</span>
+          <span class="muted">/</span>
+          <span class="roundNum" id="leaderText">—</span>
+        </div>
+      </div>
+<div class="field">
+            <label>Раунды</label>
+            <input id="inpRounds" type="number" min="1" max="100" value="10" />
+          </div>
+
+          <div class="field">
+            <label>Таймер (сек)</label>
+            <input id="inpTime" type="number" min="3" max="30" value="8" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" id="btnStartNow">Старт</button>
+          <button class="btn" id="btnOpenSetup2">Настройки</button>
+          <button class="btn ghost" id="btnEditor">Редактор</button>
+        </div>
+      </div>
+
+      <div class="timerLine" aria-hidden="true">
+        <div class="timerFill" id="timerFill"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SETUP MODAL -->
+  <div class="modal" id="setupModal" aria-hidden="true">
+    <div class="backdrop" id="setupBackdrop"></div>
+    <div class="modalCard">
+      <div class="modalHead">
+        <div class="modalTitle">Настройки</div>
+        <button class="iconBtn" id="btnCloseSetup" title="Закрыть">✕</button>
+      </div>
+      <button class="scrollHint" id="btnSetupScroll" title="Вниз">▼</button>
+      <div class="modalBody" id="setupBody">
+
+      <div class="grid2">
+        <div class="field">
+          <label>Режим</label>
+          <select id="selMode">
+            <option value="duel">Дуэль</option>
+            <option value="solo">Соло</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Уровень</label>
+          <select id="selLevel">
+            <option value="basic">basic</option>
+            <option value="hard">hard</option>
+            <option value="expert">expert</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Бонус за скорость</label>
+          <select id="selSpeed">
+            <option value="1">Вкл</option>
+            <option value="0">Выкл</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Таймер (сек)</label>
+          <input id="inpTime" type="number" min="3" max="30" value="8" />
+        </div>
+      </div>
+
+      
+      <div class="grid2">
+        <div class="field">
+          <label>Тема</label>
+          <select id="selTopic">
+            <option value="all">Всё</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Раунды</label>
+          <input id="inpRounds" type="number" min="1" max="100" value="10" />
+        </div>
+      </div>
+
+      <div class="sep"></div>
+<div class="sep"></div>
+
+      <div class="field teacherOnly">
+        <label>Набор</label>
+        <div class="row">
+          <select id="selSet" class="grow"></select>
+          <button class="btn" id="btnNewSet">Новый</button>
+          <button class="btn" id="btnRenameSet">Переим.</button>
+          <button class="btn danger" id="btnDeleteSet">Удалить</button>
+        </div>
+        <input id="inpSetName" type="text" placeholder="Название набора" />
+        <div class="small muted">Наборы сохраняются в браузере (localStorage).</div>
+      </div>
+
+      <div class="sep"></div>
+
+      <!-- QUICK ADD (used by JS) -->
+      <div class="grid2 teacherOnly">
+        <div class="field">
+          <label>Категория</label>
+          <input id="edCat" type="text" placeholder="например: artikel / essen / haus" />
+        </div>
+
+        <div class="field">
+          <label>Тип</label>
+          <select id="edType">
+            <option value="article">Artikel (der/die/das)</option>
+            <option value="case">Fälle (dem/den/der...)</option>
+            <option value="verb">Verb</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Уровень для добавления</label>
+          <select id="edLevel">
+            <option value="basic">basic</option>
+            <option value="hard">hard</option>
+            <option value="expert">expert</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label id="lblMain">Слово/фраза</label>
+          <input id="edMain" type="text" placeholder="например: der Tisch / Ich sehe ___ Hund." />
+        </div>
+
+        <div class="field">
+          <label>Правильный ответ</label>
+          <input id="edCorrect" type="text" placeholder="der / die / das / dem / den / ..." />
+        </div>
+
+        <div class="field">
+          <label>Подсказка (необязательно)</label>
+          <input id="edHint" type="text" placeholder="короткая подсказка" />
+        </div>
+      </div>
+
+      <div class="field" id="wrapOptions">
+        <label>Варианты (через запятую)</label>
+        <input id="edOptions" type="text" placeholder="dem, den, der" />
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="btnAdd">Добавить</button>
+        <button class="btn ghost" id="btnOpenFullEditor">Открыть редактор</button>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="modalFoot">
+        <button class="btn" id="btnOnlyConfirm">Сохранить</button>
+        <button class="btn primary" id="btnConfirmStart">Сохранить и старт</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR DRAWER -->
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawerHead">
+      <div class="drawerTitle">Редактор</div>
+      <button class="iconBtn" id="btnCloseEditor" title="Закрыть">✕</button>
+    </div>
+
+    <div class="drawerBody">
+      <div class="field">
+        <label>Список</label>
+        <div id="edList" class="edList"></div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="field">
+        <label>Импорт/экспорт JSON</label>
+        <textarea id="ioBox" rows="8" placeholder='[{"type":"article","main":"Tisch","correct":"der"}]'></textarea>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="btnExport">Экспорт</button>
+        <button class="btn primary" id="btnImport">Импорт (заменить)</button>
+        <button class="btn" id="btnImportAdd">Импорт (добавить)</button>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="grid2">
+        <div class="field">
+          <label>Категория</label>
+          <input id="edCat2" type="text" placeholder="например: artikel" />
+        </div>
+
+        <div class="field">
+          <label>Тип</label>
+          <select id="edType2">
+            <option value="article">Artikel</option>
+            <option value="case">Fälle</option>
+            <option value="verb">Verb</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Уровень</label>
+          <select id="edLevel2">
+            <option value="basic">basic</option>
+            <option value="hard">hard</option>
+            <option value="expert">expert</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label id="lblMain2">Слово/фраза</label>
+          <input id="edMain2" type="text" placeholder="например: der Tisch" />
+        </div>
+
+        <div class="field">
+          <label>Правильный ответ</label>
+          <input id="edCorrect2" type="text" placeholder="der" />
+        </div>
+
+        <div class="field">
+          <label>Подсказка</label>
+          <input id="edHint2" type="text" placeholder="подсказка" />
+        </div>
+      </div>
+
+      <div class="field" id="wrapOptions2">
+        <label>Варианты (через запятую)</label>
+        <input id="edOptions2" type="text" placeholder="dem, den, der" />
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="btnAdd2">Добавить</button>
+        <button class="btn" id="btnClear2">Очистить</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- WIN MODAL -->
+  <div class="modal" id="winModal" aria-hidden="true">
+    <div class="backdrop" id="winBackdrop"></div>
+    <div class="modalCard win">
+      <div class="winBadge">🏆 Победа!</div>
+      <div class="winTitle" id="winTitle">—</div>
+      <div class="winSub" id="winSub">—</div>
+      <div class="row right">
+        <button class="btn primary" id="btnPlayAgain">Играть ещё</button>
+        <button class="btn" id="btnCloseWin">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- scripts after ALL HTML -->
+  <script src="data.js"></script>
+  <script src="focus-duel.js"></script>
+</body>
+</html>
